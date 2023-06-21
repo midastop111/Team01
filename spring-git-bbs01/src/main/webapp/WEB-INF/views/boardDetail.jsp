@@ -8,6 +8,7 @@
 		<form name="checkForm" id="checkForm">
 			<input type="hidden" name="no" id="no" value="${ board.no }"/>
 			<input type="hidden" name="pass" id="rPass" />
+			<input type="hidden" name="pageNum" value="${ pageNum }" />
 		</form>
 		<div class="row text-center">
 			<div class="col">
@@ -64,7 +65,7 @@
 				<input class="btn btn-warning" type="button" id="detailUpdate" value="수정하기"/>
 				&nbsp;&nbsp;<input class="btn btn-danger"  type="button" id="detailDelete" value="삭제하기" />			
 				&nbsp;&nbsp;<input class="btn btn-primary" type="button" value="목록보기" 
-						onclick="location.href='boardList'"/>						
+						onclick="location.href='boardList?pageNum=${pageNum}'"/>						
 			</div>
 		</div>
 	</div>	

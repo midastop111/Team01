@@ -49,7 +49,12 @@ public class BoardDaoImpl implements BoardDao {
 	 * 현재 페이지에 해당하는 게시 글 리스트를 DB에서 읽어와 반환 하는 메소드
 	 **/
 	@Override
-	public List<Board> boardList() {
+	public List<Board> boardList(int startRow, int num) {
+		
+		// SQL 파라미터가 여러 개일 경우 Map을 이용하여 지정한다.
+		Map<String, Integer> params = new HashMap<String, Integer>();
+		params.put("startRow", startRow);
+		params.put("num", num);
 		
 		/* BoardMapper.xml에서 맵핑 구문을 작성하고 아래와 같이 SqlSession
 		 * 객체의 메서드를 호출하면서 맵핑 설정을 지정하게 되면 이 메서드 안에서
@@ -74,21 +79,39 @@ public class BoardDaoImpl implements BoardDao {
 		 * 
 		 * 만약 SQL 파라미터를 지정해야 한다면 두 번째 인수에 필요한 파라미터를
 		 * 지정하면 되는데 파라미터가 여러 개일 경우 Map 객체에 담아 두 번째
-		 * 인수로 지정하면 된다.  
+		 * 인수로 지정하면 된다.
 		 **/
-		return sqlSession.selectList(NAME_SPACE + ".boardList");
+		return sqlSession.selectList(NAME_SPACE + ".boardList", params);
 	}
 
-	/* 게시 글 상세보기 요청 시 호출되는 메서드
-	 * no에 해당하는 게시 글 을 DB에서 읽어와 Board 객체로 반환 하는 메서드 
+	/* 전체 게시 글 수를 계산하기 위해 호출되는 메서드 - paging 처리에 사용
+	 * DB 테이블에 등록된 모든 게시 글의 수를 반환 하는 메서드
 	 **/
 	@Override
-	public Board getBoard(int no) {		
+	public int getBoardCount() {
+		return sqlSession.selectOne(NAME_SPACE + ".getBoardCount");
+	}
+	
+	/* 게시 글 상세보기 요청 시 호출되는 메서드
+	 * no에 해당하는 게시 글 을 DB에서 읽어와 Board 객체로 반환 하는 메서드
+	 **/
+	@Override
+	public Board getBoard(int no) {
 		
 		// getBoard 맵핑 구문을 호출하면서 게시 글 번호인 no를 파라미터로 지정했다.		 
 		return sqlSession.selectOne(NAME_SPACE + ".getBoard", no);
 	}
 
+	/* 게시 글을 조회한 횟수를 증가시키는 메서드
+	 * 게시 글 상세보기 요청 시 게시 글을 조회한 횟수를 DB에서 증가시켜주는 메서드
+	 **/
+	@Override
+	public void incrementReadCount(int no) {
+		
+		// incrementReadCount 맵핑 구문을 호출하면서 no를 파라미터로 지정했다.
+		sqlSession.update(NAME_SPACE + ".incrementReadCount", no);
+	}
+	
 	/* 게시 글쓰기 요청 시 호출되는 메서드
 	 * 게시 글쓰기 요청 시 게시 글 내용을 Board 객체로 받아 DB에 추가하는 메서드 
 	 **/

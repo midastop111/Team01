@@ -9,12 +9,17 @@ public interface BoardDao {
 	/* 한 페이지에 보여 질 게시 글 리스트 요청 시 호출되는 메소드
 	 * 현재 페이지에 해당하는 게시 글 리스트를 DB에서 읽어와 반환 하는 메소드
 	 **/
-	public abstract List<Board> boardList();
+	public abstract List<Board> boardList(int startRow, int num);
 	
 	/* 게시 글 상세보기 요청 시 호출되는 메서드
-	 * no에 해당하는 게시 글 을 DB에서 읽어와 Board 객체로 반환 하는 메서드 
+	 * no에 해당하는 게시 글 을 DB에서 읽어와 Board 객체로 반환 하는 메서드
 	 **/
 	public abstract Board getBoard(int no);
+	
+	/* 게시 글을 조회한 횟수를 증가시키는 메서드
+	 * 게시 글 상세보기 요청 시 게시 글을 조회한 횟수를 DB에서 증가시켜주는 메서드
+	 **/
+	public abstract void incrementReadCount(int no);
 	
 	/* 게시 글쓰기 요청 시 호출되는 메서드
 	 * 게시 글쓰기 요청 시 게시 글 내용을 Board 객체로 받아 DB에 추가하는 메서드 
@@ -35,4 +40,9 @@ public interface BoardDao {
 	 * no에 해당 하는 게시 글을 DB에서 삭제하는 메서드 
 	 **/
 	public abstract void deleteBoard(int no);
+	
+	/* 전체 게시 글 수를 계산하기 위해 호출되는 메서드 - paging 처리에 사용
+	 * DB 테이블에 등록된 모든 게시 글의 수를 반환 하는 메서드
+	 **/
+	public abstract int getBoardCount();
 }
